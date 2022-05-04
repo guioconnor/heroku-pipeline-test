@@ -5,7 +5,7 @@ const app = express();
 app.get('/', (req, res) => {
   res.send({
     status: 'ok',
-    version: 1
+    version: 2
   })
 });
 
