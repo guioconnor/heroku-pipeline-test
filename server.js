@@ -8,6 +8,13 @@ app.get('/', (req, res) => {
   })
 });
 
+app.get('/dashboard', (req, res) => {
+  res.send({
+    status: 'ok',
+    view: 'dashboard'
+  })
+});
+
 const PORT = process.env.PORT || 3030
 app.listen(PORT)
 console.log(`Listening at port ${PORT}`)
