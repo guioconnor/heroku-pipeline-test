@@ -1,0 +1,14 @@
+{
+  "name": "Heroku Pipeline Test",
+  "description": "A barebones Node.js app using Express",
+  "keywords": ["node", "express", "static"],
+  "env": {
+    "SOME_ENV_VAR": "foobar"
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+
+}

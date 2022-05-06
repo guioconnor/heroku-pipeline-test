@@ -5,7 +5,8 @@ const app = express();
 app.get('/', (req, res) => {
   res.send({
     status: 'ok',
-    version: 2
+    version: 2,
+    someEnvVar: process.env.SOME_ENV_VAR
   })
 });
 
