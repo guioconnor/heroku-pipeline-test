@@ -1,35 +1,26 @@
-name: Heroku Review App
-
 on:
   pull_request:
-    types: [opened, reopened, synchronize, labeled, closed]
-  pull_request_target:
-    types: [opened, reopened, synchronize, labeled, closed]
-
+    types: [opened, reopened, closed, synchronize]
 jobs:
-  heroku-review-application:
-    name: Heroku Review App
+  automate-review-app:
     runs-on: ubuntu-latest
-    env:
-      APP_NAME: heroku-pipeline-test
+    name: A job to create and delete review a review app
+    environment:
+      name: "heroku-pipeline-test-pr-${{ github.event.number }}"
+      url: "https://heroku-pipeline-test-pr-${{ github.event.number }}.herokuapp.com"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Heroku Review Application
-        uses: guioconnor/heroku-review-app-actions@pipeline-owner
+      - name: Display PR Number
+        run: echo "PR ${{ github.event.number }}"
+      - name: Deploy Heroku app
+        uses: ./.github/actions/heroku-review-app-actions
         id: deploy
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          github_label: Review App
-          heroku_api_token: ${{ secrets.HEROKU_API_KEY }}
-          heroku_pipeline_id: ${{ secrets.HEROKU_PIPELINE_ID }}
-          team: puregroup
-      - name: Comment on commit
-        uses: ./.github/actions/rewritable-pr-comment
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMENT_IDENTIFIER: "Deploy"
-          message: |
-            I deployed a review app for you to try out this pull request 👇🏽
-
-            Heroku App: ${{ steps.deploy.outputs.app_web_url }}
+          api-key: ${{ secrets.HEROKU_API_KEY }}
+          pipeline-id: ${{ secrets.HEROKU_PIPELINE_ID }}
+          app-name-prefix: heroku-pipeline-test
+          region: eu
+          use-app-json: "true"
+      - name: Get the review app url
+        run: echo "The URL is ${{ steps.deploy.outputs.url }}"
